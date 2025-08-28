@@ -2,7 +2,7 @@ from typing import Dict, List
 from openpyxl import load_workbook
 
 def get_excel_mapping() -> Dict[str, List[str]]:
-    """Henter POF-mapping fra Martin og Sofies regneark"""
+    """Henter POF-mapping fra Julies regneark"""
     global excel_mappings
     if not excel_mappings:
         raise ValueError("excel-mapping er ikke indlæst, brug load_excel_mapping først")
