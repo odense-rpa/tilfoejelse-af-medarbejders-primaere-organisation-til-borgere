@@ -27,7 +27,7 @@ async def populate_queue(workqueue: Workqueue):
 
     for organisation in regler["Organisationer"]:
         borgere = nexus_database_client.get_patients_with_recently_assigned_professionals_by_organisation_name(
-            organisation, 30
+            organisation, 2
         )
         for borger in borgere:
             workqueue.add_item(
@@ -48,35 +48,16 @@ async def process_workqueue(workqueue: Workqueue):
             data = item.data  # Item data deserialized from json as dict
  
             try:
-                # Process the item here
                 borger = nexus.borgere.hent_borger(data["cpr"])
-                borgers_organisationer = nexus.organisationer.hent_organisationer_for_borger(borger)
 
-                # Find organisationen, der skal opdateres.
-                organisation_til_opdatering = next(
-                    (
-                        item
-                        for item in borgers_organisationer
-                        if item["organization"]["name"] == data["organisation"]
-                    ),
-                    None,
-                )
-                # Hvis organisationen allerede er primær, så stopper vi her.
-                if organisation_til_opdatering["primaryOrganization"]:
-                    continue
+                organisation_der_skal_tilføjes = nexus.organisationer.hent_organisation_ved_navn(data["organisation"])
+                nexus.organisationer.tilføj_borger_til_organisation(borger, organisation_der_skal_tilføjes)
 
-                nexus.organisationer.opdater_borger_organisations_relation(
-                    organisation_til_opdatering,
-                    None,
-                    True
-                )
-                
                 tracker.track_task(
                     proces_navn
                 )
                 pass
             except WorkItemError as e:
-                # A WorkItemError represents a soft error that indicates the item should be passed to manual processing or a business logic fault
                 logger.error(f"Error processing item: {data}. Error: {e}")
                 item.fail(str(e))
 
