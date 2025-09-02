@@ -15,7 +15,7 @@ nexus: NexusClientManager
 nexus_database_client: NexusDatabaseClient
 tracker: Tracker
 
-proces_navn = "Tilføjelse af primær organisation hos ændrede borgere"
+proces_navn = "Tilføjelse af medarbejders primære organisation til borgere"
 
 
 async def populate_queue(workqueue: Workqueue):
