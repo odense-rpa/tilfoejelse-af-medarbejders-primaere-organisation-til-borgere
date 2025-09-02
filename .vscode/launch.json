@@ -12,7 +12,7 @@
             "console": "integratedTerminal",
             "args": [
                 "--excel-file",
-                "G:/RPA/Leverancer/Tilføjelse af primær organisation hos ændrede borgere/Regelsæt.xlsx"
+                "G:/RPA/Leverancer/Tilføjelse af medarbejders primære organisation til borgere/Regelsæt.xlsx"
             ]
         },
         {
@@ -24,7 +24,7 @@
             "args": [
                 "--queue",
                 "--excel-file",
-                "G:/RPA/Leverancer/Tilføjelse af primær organisation hos ændrede borgere/Regelsæt.xlsx"
+                "G:/RPA/Leverancer/Tilføjelse af medarbejders primære organisation til borgere/Regelsæt.xlsx"
             ]
         }
     ]
