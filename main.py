@@ -50,13 +50,19 @@ async def process_workqueue(workqueue: Workqueue):
             try:
                 borger = nexus.borgere.hent_borger(data["cpr"])
 
+                # check om borger allerede er tilføjet til organisationen
+                borgers_organisationer = nexus.organisationer.hent_organisationer_for_borger(borger)
+                allerede_tilføjet = any(org for org in borgers_organisationer if org["organization"]["name"] == data["organisation"])
+                if allerede_tilføjet:
+                    continue
+
+                # Henter og tilføjer organisation til borger
                 organisation_der_skal_tilføjes = nexus.organisationer.hent_organisation_ved_navn(data["organisation"])
                 nexus.organisationer.tilføj_borger_til_organisation(borger, organisation_der_skal_tilføjes)
 
                 tracker.track_task(
                     proces_navn
                 )
-                pass
             except WorkItemError as e:
                 logger.error(f"Error processing item: {data}. Error: {e}")
                 item.fail(str(e))
