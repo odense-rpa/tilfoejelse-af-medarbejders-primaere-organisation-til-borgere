@@ -41,8 +41,6 @@ async def populate_queue(workqueue: Workqueue):
 async def process_workqueue(workqueue: Workqueue):
     logger = logging.getLogger(__name__)
 
-    logger.info("Hello from process workqueue!")
-
     for item in workqueue:
         with item:
             data = item.data  # Item data deserialized from json as dict
@@ -59,6 +57,7 @@ async def process_workqueue(workqueue: Workqueue):
                 # Henter og tilføjer organisation til borger
                 organisation_der_skal_tilføjes = nexus.organisationer.hent_organisation_ved_navn(data["organisation"])
                 nexus.organisationer.tilføj_borger_til_organisation(borger, organisation_der_skal_tilføjes)
+                logger.info(f"Tilføjet organisation {data['organisation']} til borger {data['cpr']}")
 
                 tracker.track_task(
                     proces_navn
