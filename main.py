@@ -86,13 +86,7 @@ if __name__ == "__main__":
         help="Populate the queue with test data and exit",
     )
     args = parser.parse_args()
-
-    # Validate Excel file exists
-    if not os.path.isfile(args.excel_file):
-        raise FileNotFoundError(f"Excel file not found: {args.excel_file}")
-
-    # Load POF mapping data once on startup
-    load_excel_mapping(args.excel_file)
+ 
 
     # Initialize external systems for automation here..
     nexus_credential = Credential.get_credential("KMD Nexus - produktion")
@@ -121,6 +115,12 @@ if __name__ == "__main__":
     # Queue management
     if "--queue" in sys.argv:
         workqueue.clear_workqueue("new")
+        # Validate Excel file exists
+        if not os.path.isfile(args.excel_file):
+            raise FileNotFoundError(f"Excel file not found: {args.excel_file}")
+
+        # Load POF mapping data once on startup
+        load_excel_mapping(args.excel_file)
         asyncio.run(populate_queue(workqueue))
         exit(0)
 
